@@ -310,7 +310,7 @@ specularBlue = specularB*pow(dot(H,worldNormal),shininess);
  float colorR = ambientRed+diffuseRed+specularRed;
  float colorG = ambientGreen+diffuseGreen+specularGreen;
  float colorB = ambientBlue+diffuseBlue+specularBlue;
-            gl_FragColor = vec4(ambientRed, ambientGreen, ambientBlue, 1.0); 
+            gl_FragColor = vec4(diffuseRed, diffuseGreen, diffuseBlue, 1.0); 
         }
     `;
 

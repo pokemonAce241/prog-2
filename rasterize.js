@@ -298,7 +298,8 @@ function setupShaders() {
 	
 	 vec3 L = normalize(lightSource-worldPosition);
 	 vec3 V = normalize(eyeSource-worldPosition);
-	float LdotN = dot(L,worldNormal);
+	 vec3 N = normalize(worldNormal)
+	float LdotN = max(dot(L,N),0.0);
         float ambientRed = ambientR;
 	float diffuseRed = diffuseR*LdotN;
 	float specularRed = 0.0;
@@ -308,19 +309,17 @@ function setupShaders() {
 	float ambientBlue = ambientB;
 	float diffuseBlue = diffuseB*LdotN;
 	float specularBlue = 0.0;
-	
+if(LdotN > 0.0){	
 vec3 H = normalize(L+V);
-float spec = dot(H,worldNormal);
-spec = pow(spec,shininess);
-if( spec > 1.0)
-	spec = 1.0;
-specularRed = specularR*spec;
-specularGreen = specularG*spec;
-specularBlue = specularB*spec;
+
+specularRed = specularR*pow(max(0.0,dot(H,N)),shininess);
+specularGreen = specularG*pow(max(0.0,dot(H,N)),shininess);
+specularBlue = specularB*pow(max(0.0,dot(H,N)),shininess);
 //vec3 R = -normalize(reflect(L,worldNormal));
-//specularRed = specularR*pow(dot(R,worldNormal),shininess);
-//specularGreen = specularG*pow(dot(R,worldNormal),shininess);
-//specularBlue = specularB*pow(dot(R,worldNormal),shininess);
+//specularRed = specularR*pow(dot(R,N),shininess);
+//specularGreen = specularG*pow(dot(R,N),shininess);
+//specularBlue = specularB*pow(dot(R,N),shininess);
+}
 
  float colorR = ambientRed+diffuseRed+specularRed;
  float colorG = ambientGreen+diffuseGreen+specularGreen;

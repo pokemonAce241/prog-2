@@ -79,12 +79,12 @@ var currentlyPressedKeys = {};
 function handleKeyDown(event){
 	currentlyPressedKeys[event.keyCode] = true;
 if(String.fromCharCode(event.keyCode) == "A")
-   console.log("click "+currentlyPressedKeys[event.keyCode]);
+   console.log("click "+currentlyPressedKeys[event.keyCode]+event.keyCode);
 }
 
 function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
-	console.log("click "+currentlyPressedKeys[event.keyCode]);
+	console.log("click "+currentlyPressedKeys[event.keyCode]+event.keyCode);
   }
 
 // ASSIGNMENT HELPER FUNCTIONS

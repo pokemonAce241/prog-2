@@ -307,9 +307,9 @@ specularBlue = specularB*pow(dot(H,worldNormal),shininess);
 //specularGreen = specularG*pow(dot(R,worldNormal),shininess);
 //specularBlue = specularB*pow(dot(R,worldNormal),shininess);
 }
- float colorR = diffuseRed+specularRed;
- float colorG = diffuseGreen+specularGreen;
- float colorB = diffuseBlue+specularBlue;
+ float colorR = ambientRed+diffuseRed+specularRed;
+ float colorG = ambientGreen+diffuseGreen+specularGreen;
+ float colorB = ambientBlue+diffuseBlue+specularBlue;
             gl_FragColor = vec4(colorR, colorG, colorB, 1.0); 
         }
     `;

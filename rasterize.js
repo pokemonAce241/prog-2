@@ -78,8 +78,13 @@ var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
 	currentlyPressedKeys[event.keyCode] = true;
-if(String.fromCharCode() == "A"){
-	vec3.add(lookAt,vec3.fromValues(-0.2,0.0,0.0),lookAt);
+if(String.fromCharCode(event.keyCode) == "a"){
+	vec3.add(lookAt,vec3.fromValues(-0.1,0.0,0.0),lookAt);
+	
+}
+
+if(String.fromCharCode(event.keyCode) == "d"){
+	vec3.add(lookAt,vec3.fromValues(0.1,0.0,0.0),lookAt);
 	
 }
 	

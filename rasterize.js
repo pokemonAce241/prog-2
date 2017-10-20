@@ -78,7 +78,7 @@ var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
 	if(event.keyCode == 65)
-		lookAt.x -+ 0.1
+		lookAt.x -= 0.1
 }
 
 function handleKeyUp(event) {

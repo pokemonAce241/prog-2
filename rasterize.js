@@ -79,6 +79,7 @@ var currentlyPressedKeys = {};
 function handleKeyDown(event){
 	if(event.keyCode == 65){
 		lookAt.x -= 0.1;
+		 console.log("lookAt: "+lookAt.x);
 	}
 }
 

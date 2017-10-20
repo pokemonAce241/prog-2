@@ -298,7 +298,7 @@ function setupShaders() {
 	
 	 vec3 L = normalize(lightSource-worldPosition);
 	 vec3 V = normalize(eyeSource-worldPosition);
-	 vec3 N = normalize(worldNormal)
+	 vec3 N = normalize(worldNormal);
 	float LdotN = max(dot(L,N),0.0);
         float ambientRed = ambientR;
 	float diffuseRed = diffuseR*LdotN;

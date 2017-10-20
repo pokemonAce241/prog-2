@@ -443,7 +443,7 @@ function handleKeys(){
 	   }
 	
 	if(currentlyPressedKeys[68]){
-		 console.log("click "+;
+		 console.log("click ");
 		vec3.add(lookAt,vec3.fromValues(0.1,0,0),lookAt);
 	   
 	   }

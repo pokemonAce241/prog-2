@@ -78,6 +78,8 @@ var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
 	currentlyPressedKeys[event.keyCode] = true;
+if(String.fromCharCode(event.keyCode) == "A")
+   console.log("click ");
 }
 
 function handleKeyUp(event) {

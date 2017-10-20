@@ -311,7 +311,7 @@ function setupShaders() {
 	
 vec3 H = normalize(L+V);
 float spec = dot(H,worldNormal);
-spec = Math.pow(spec,shininess);
+spec = pow(spec,shininess);
 if( spec > 1.0)
 	spec = 1.0;
 specularRed = specularR*spec;

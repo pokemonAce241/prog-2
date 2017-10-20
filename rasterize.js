@@ -565,6 +565,7 @@ function main() {
   loadTriangles(); // load in the triangles from tri file
   loadEllipsoids();
   setupShaders(); // setup the webGL shaders
+  handleKeys();
   renderTriangles(); // draw the triangles using webGL
   renderEllipsoids();
 

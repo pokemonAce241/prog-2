@@ -468,6 +468,7 @@ function handleKeys(){
 
 // render the loaded model
 function renderTriangles() {
+	handleKeys();
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // clear frame/depth buffers
 	mat4.lookAt(view,Eye,lookAt,lookUp);
 	mat4.perspective(proj,45,gl.viewportWidth/gl.viewportHeight,0.1,100.0);
@@ -582,7 +583,6 @@ function main() {
   loadTriangles(); // load in the triangles from tri file
   loadEllipsoids();
   setupShaders(); // setup the webGL shaders
-  handleKeys();
   renderTriangles(); // draw the triangles using webGL
   renderEllipsoids();
 

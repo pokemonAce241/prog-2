@@ -229,8 +229,8 @@ function loadEllipsoids(){
 		
 	}
 	
-	for(var latNumber = 0; latNumber < latitude; latNumber++){
-		for(var longNumber = 0; longNumber < longitude; longNumber++){
+	for(var latNumber = 0; latNumber <= latitude; latNumber++){
+		for(var longNumber = 0; longNumber <= longitude; longNumber++){
 		  var first =(latNumber*(longitude+1))+longNumber;
 		  var second = first+longitude+1;
 		  inputEllipsoids[whichSet].indexArray.push(first);

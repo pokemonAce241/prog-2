@@ -37,9 +37,9 @@ var normalBuffers = [];
 var vertexPositionAttrib; // where to put position for vertex shader
 var vertexNormalAttrib;
 
-var ellipsoidVertexBuffer;
-var ellipsoidIndexBuffer;
-var ellipsoidNormalBuffer;
+var ellipsoidVertexBuffers = [];
+var ellipsoidIndexBuffers = [];
+var ellipsoidNormalBuffers = [];
 var coordArray = []; //ellipsoid vertex matrix
 var normalArray = [];
 var indexArray = []; //ellipsoid index matrix
@@ -189,8 +189,16 @@ function loadTriangles() {
 
 function loadEllipsoids(){
  inputEllipsoids = getJSONFile(INPUT_SPHERES_URL,"ellipsoids");
+ 	
 
     if (inputEllipsoids != String.null) {
+	
+	
+	for(var whichSet = 0; whichSet<inputEllipsoids.length; whichSet++) {
+	
+	inputEllipsoids[whichSet].coordArray = [];
+	inputEllipsoids[whichSet].normalArray = [];
+	inputEllipsoids[whichSet].indexArray = [];
 	
 	for(var latNumber = 0; latNumber <= latitude; latNumber++){
 		var theta = latNumber*Math.PI/latitude;
@@ -206,12 +214,16 @@ function loadEllipsoids(){
 			var y = cosTheta;
 			var x = sinPhi*sinTheta;
 			
-			normalArray.push(x);
-			normalArray.push(y);
-			normalArray.push(z);
-			coordArray.push(radius*x);
-			coordArray.push(radius*y);
-			coordArray.push(radius*z);
+			var norX = (2*(x-inputEllipsoids[whichSet].x))/(Math.pow(inputEllipsoids[whichSet].a,2));
+			var norY = (2*(y-inputEllipsoids[whichSet].y))/(Math.pow(inputEllipsoids[whichSet].b,2));
+			var norZ = (2*(z-inputEllipsoids[whichSet].z))/(Math.pow(inputEllipsoids[whichSet].c,2));
+			
+			inputEllipsoids[whichSet].normalArray.push(norX);
+			inputEllipsoids[whichSet].normalArray.push(norY);
+			inputEllipsoids[whichSet].normalArray.push(norZ);
+			inputEllipsoids[whichSet].coordArray.push(radius*x);
+			inputEllipsoids[whichSet].coordArray.push(radius*y);
+			inputEllipsoids[whichSet].coordArray.push(radius*z);
 		}
 		
 		
@@ -221,13 +233,13 @@ function loadEllipsoids(){
 		for(var longNumber = 0; longNumber < longitude; longNumber++){
 		  var first =(latNumber*(longitude+1))+longNumber;
 		  var second = first+longitude+1;
-		  indexArray.push(first);
-		  indexArray.push(second);
-		  indexArray.push(first+1);
+		  inputEllipsoids[whichSet].indexArray.push(first);
+		  inputEllipsoids[whichSet].indexArray.push(second);
+		  inputEllipsoids[whichSet].indexArray.push(first+1);
 		  
-		  indexArray.push(second);
-		  indexArray.push(second+1);
-		  indexArray.push(first+1);
+		  inputEllipsoids[whichSet].indexArray.push(second);
+		  inputEllipsoids[whichSet].indexArray.push(second+1);
+		  inputEllipsoids[whichSet].indexArray.push(first+1);
 		  
 		
 		}
@@ -235,30 +247,30 @@ function loadEllipsoids(){
 	}
 	
 	// send the vertex coords to webGL
-        ellipsoidVertexBuffer = gl.createBuffer(); // init empty vertex coord buffer
-        gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidVertexBuffer); // activate that buffer
-        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(coordArray),gl.STATIC_DRAW); // coords to that buffer
-        ellipsoidVertexBuffer.itemSize = 3;
-	ellipsoidVertexBuffer.numItem = coordArray.length/3;
+        ellipsoidVertexBuffers[whichSet] = gl.createBuffer(); // init empty vertex coord buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidVertexBuffers[whichSet]); // activate that buffer
+        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(inputEllipsoids[whichSet].coordArray),gl.STATIC_DRAW); // coords to that buffer
+        ellipsoidVertexBuffers[whichSet].itemSize = 3;
+	ellipsoidVertexBuffers[whichSet].numItem = inputEllipsoids[whichSet].coordArray.length/3;
 	    
         // send the triangle indices to webGL
-        ellipsoidIndexBuffer = gl.createBuffer(); // init empty ellipsoid index buffer
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ellipsoidIndexBuffer); // activate that buffer
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indexArray),gl.STATIC_DRAW); // indices to that buffer
-	ellipsoidIndexBuffer.itemSize = 1;
-	ellipsoidIndexBuffer.numItems = indexArray.length;
+        ellipsoidIndexBuffers[whichSet] = gl.createBuffer(); // init empty ellipsoid index buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ellipsoidIndexBuffers[whichSet]); // activate that buffer
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(inputEllipsoids[whichSet].indexArray),gl.STATIC_DRAW); // indices to that buffer
+	ellipsoidIndexBuffers[whichSet].itemSize = 1;
+	ellipsoidIndexBuffers[whichSet].numItems = inputEllipsoids[whichSet].indexArray.length;
 	    
 	//send the normal coords to webGl
-	ellipsoidNormalBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidNormalBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(normalArray),gl.STATIC_DRAW);
-	ellipsoidNormalBuffer.itemSize = 3;
-	ellipsoidNormalBuffer.numItem = normalArray.length/3;
+	ellipsoidNormalBuffers[whichSet] = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidNormalBuffers[whichSet]);
+	gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(inputEllipsoids[whichSet].normalArray),gl.STATIC_DRAW);
+	ellipsoidNormalBuffers[whichSet].itemSize = 3;
+	ellipsoidNormalBuffers[whichSet].numItem = inputEllipsoids[whichSet].normalArray.length/3;
 	    
 	
 }
 }
-
+}
 
 
 // setup the webGL shaders
@@ -484,16 +496,16 @@ gl.uniformMatrix4fv(modelMatrixULoc,false,model);
 
 
 //vertex buffer
-    gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidVertexBuffer); // activate
-    gl.vertexAttribPointer(vertexPositionAttrib,ellipsoidVertexBuffer.itemSize,gl.FLOAT,false,0,0); // feed
+    gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidVertexBuffers[whichSet]); // activate
+    gl.vertexAttribPointer(vertexPositionAttrib,ellipsoidVertexBuffers[whichSet].itemSize,gl.FLOAT,false,0,0); // feed
 	
-    gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidNormalBuffer);
-    gl.vertexAttribPointer(vertexNormalAttrib,ellipsoidNormalBuffer.itemSize,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,ellipsoidNormalBuffers[whichSet]);
+    gl.vertexAttribPointer(vertexNormalAttrib,ellipsoidNormalBuffers[whichSet].itemSize,gl.FLOAT,false,0,0);
 
 
     // index buffer: activate and render
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ellipsoidIndexBuffer); // activate
-    gl.drawElements(gl.TRIANGLES,ellipsoidIndexBuffer.numItems,gl.UNSIGNED_SHORT,0); // render
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ellipsoidIndexBuffers[whichSet]); // activate
+    gl.drawElements(gl.TRIANGLES,ellipsoidIndexBuffers[whichSet].numItems,gl.UNSIGNED_SHORT,0); // render
 
 }
 

@@ -77,9 +77,8 @@ var EyeLoc;
 var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
-	currentlyPressedKeys[event.keyCode] = true;
-if(String.fromCharCode(event.keyCode) == "A")
-   console.log("click "+currentlyPressedKeys[event.keyCode]+event.keyCode);
+	if(event.keyCode == 65)
+		lookAt.x -+ 0.1
 }
 
 function handleKeyUp(event) {

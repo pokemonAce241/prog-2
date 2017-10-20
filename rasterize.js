@@ -78,7 +78,7 @@ var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
 	currentlyPressedKeys[event.keyCode] = true;
-if(String.fromCharCode() == "a"){
+if(String.fromCharCode() == "A"){
 	vec3.add(lookAt,vec3.fromValues(-0.2,0.0,0.0),lookAt);
 	
 }

@@ -308,20 +308,23 @@ function setupShaders() {
 	float ambientBlue = ambientB;
 	float diffuseBlue = diffuseB*LdotN;
 	float specularBlue = 0.0;
-	if(LdotN > 0.0)
-{
+	
 vec3 H = normalize(L+V);
-specularRed = specularR*pow(dot(H,worldNormal),shininess);
-specularGreen = specularG*pow(dot(H,worldNormal),shininess);
-specularBlue = specularB*pow(dot(H,worldNormal),shininess);
+float spec = dot(H,worldNormal);
+spec = Math.pow(spec,shininess);
+if( spec > 1.0)
+	spec = 1.0;
+specularRed = specularR*spec;
+specularGreen = specularG*spec;
+specularBlue = specularB*spec;
 //vec3 R = -normalize(reflect(L,worldNormal));
 //specularRed = specularR*pow(dot(R,worldNormal),shininess);
 //specularGreen = specularG*pow(dot(R,worldNormal),shininess);
 //specularBlue = specularB*pow(dot(R,worldNormal),shininess);
-}
- float colorR = ambientRed+diffuseRed;
- float colorG = ambientGreen+diffuseGreen;
- float colorB = ambientBlue+diffuseBlue;
+
+ float colorR = ambientRed+diffuseRed+specularRed;
+ float colorG = ambientGreen+diffuseGreen+specularGreen;
+ float colorB = ambientBlue+diffuseBlue+specularBlue;
             gl_FragColor = vec4(colorR, colorG, colorB, 1.0); 
         }
     `;

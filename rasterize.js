@@ -578,7 +578,7 @@ gl.uniformMatrix4fv(modelMatrixULoc,false,model);
 
 
 function main() {
-
+while(true){
   setupWebGL(); // set up the webGL environment
   loadLights();
   loadTriangles(); // load in the triangles from tri file
@@ -586,7 +586,7 @@ function main() {
   setupShaders(); // setup the webGL shaders
   renderTriangles(); // draw the triangles using webGL
   renderEllipsoids();
-
+}
   
 
 } // end main

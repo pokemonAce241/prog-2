@@ -8,6 +8,8 @@ const WIN_LEFT = 0; const WIN_RIGHT = 1;  // default left and right x coords in 
 const WIN_BOTTOM = 0; const WIN_TOP = 1;  // default top and bottom y coords in world space
 const INPUT_TRIANGLES_URL = "https://ncsucgclass.github.io/prog2/triangles.json"; // triangles file loc
 const INPUT_SPHERES_URL = "https://ncsucgclass.github.io/prog2/ellipsoids.json"; // ellipsoids file loc
+const INPUT_LIGHTS_URL = "https://ncsucgclass.github.io/prog2/lights.json"; // ellipsoids file loc
+
 var Eye = new vec3.fromValues(0.5,0.5,-0.5); // default eye position in world space
 var lookAt = new vec3.fromValues(0.5,0.5,1.0); // default look at position in world space
 var lookUp = new vec3.fromValues(0.0,1.0,0.0); // default look upposition in world space
@@ -126,6 +128,14 @@ function setupWebGL() {
     } // end catch
 
 } // end setupWebGL
+
+function loadLights(){
+	inputLights = getJSONFile(INPUT_LIGHTS_URL,"lights");
+	if (inputLights != String.null) {
+	lightDir.set(inputLights[0].x,inputLights[0].y,inputLights[0].z);	
+	}
+	
+}
 
 // read triangles in, load them into webgl buffers
 function loadTriangles() {
@@ -525,6 +535,7 @@ gl.uniformMatrix4fv(modelMatrixULoc,false,model);
 function main() {
 
   setupWebGL(); // set up the webGL environment
+  loadLights();
   loadTriangles(); // load in the triangles from tri file
   loadEllipsoids();
   setupShaders(); // setup the webGL shaders

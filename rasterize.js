@@ -448,6 +448,18 @@ function handleKeys(){
 	   
 	   }
 	
+	if(currentlyPressedKeys[83]){
+		 console.log("click ");
+		vec3.subtract(Eye,vec3.fromValues(0,0,0.1),lookAt);
+	   
+	   }
+	
+	if(currentlyPressedKeys[87]){
+		 console.log("click ");
+		vec3.add(Eye,vec3.fromValues(0,0,0.1),lookAt);
+	   
+	   }
+	
 }
 
 

@@ -437,11 +437,13 @@ specularBlue = specularB*pow(max(0.0,dot(H,N)),shininess);
 
 function handleKeys(){
 	if(currentlyPressedKeys[65]){
+		console.log("click ");
 		vec3.subtract(lookAt,vec3.fromValues(0.1,0,0),lookAt);
 	   
 	   }
 	
 	if(currentlyPressedKeys[68]){
+		 console.log("click "+;
 		vec3.add(lookAt,vec3.fromValues(0.1,0,0),lookAt);
 	   
 	   }

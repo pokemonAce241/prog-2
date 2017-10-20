@@ -132,8 +132,7 @@ function setupWebGL() {
 function loadLights(){
 	inputLights = getJSONFile(INPUT_LIGHTS_URL,"lights");
 	if (inputLights != String.null) {
-		lightDir = new vec3.fromValues(inputLights[0].x,inputLights[0].y,inputLights[0].z);
-		
+		vec3.set(new vec3(inputLights[0].x,inputLights[0].y,inputLights[0].z),lightDir);	
 	}
 	
 }

@@ -480,13 +480,13 @@ function handleKeys(){
 	
 	if(currentlyPressedKeys[81]){
 		 console.log("click ");
-		vec3.add(lookAt,vec3.fromValues(0,0.01,0),lookAt);
+		vec3.add(lookAt,vec3.fromValues(0,-0.01,0),lookAt);
 	   
 	   }
 	
 	if(currentlyPressedKeys[69]){
 		 console.log("click ");
-		vec3.add(lookAt,vec3.fromValues(0,-0.01,0),lookAt);
+		vec3.add(lookAt,vec3.fromValues(0,0.01,0),lookAt);
 	   
 	   }
 	

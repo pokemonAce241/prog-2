@@ -570,7 +570,7 @@ function drawLoop(){
 	handleKeys();
 	renderTriangles();
 	renderEllipsoids();
-	window.setTimeout(renderLoop, 1000 / 60);
+	window.setTimeout(drawLoop, 1000 / 60);
 	
 }
 

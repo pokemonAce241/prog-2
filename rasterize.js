@@ -478,13 +478,13 @@ function handleKeys(){
 	   
 	   }
 	
-	if(currentlyPressedKeys[83]){
+	if(currentlyPressedKeys[81]){
 		 console.log("click ");
 		vec3.add(lookAt,vec3.fromValues(0,0.01,0),lookAt);
 	   
 	   }
 	
-	if(currentlyPressedKeys[87]){
+	if(currentlyPressedKeys[69]){
 		 console.log("click ");
 		vec3.add(lookAt,vec3.fromValues(0,-0.01,0),lookAt);
 	   
@@ -493,15 +493,15 @@ function handleKeys(){
 	
 	
 	
-	if(currentlyPressedKeys[81]){
+	if(currentlyPressedKeys[87]){
 		 console.log("click ");
-		vec3.add(lookAt,vec3.fromValues(0,0,0.01),lookAt);
+		vec3.add(Eye,vec3.fromValues(0,0,-0.01),Eye);
 	   
 	   }
 	
-	if(currentlyPressedKeys[69]){
+	if(currentlyPressedKeys[83]){
 		 console.log("click ");
-		vec3.add(lookAt,vec3.fromValues(0,0,-0.01),lookAt);
+		vec3.add(Eye,vec3.fromValues(0,0,0.01),Eye);
 	   
 	   }
 	

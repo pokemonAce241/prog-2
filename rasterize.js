@@ -437,25 +437,25 @@ specularBlue = specularB*pow(max(0.0,dot(H,N)),shininess);
 
 
 function handleKeys(){
-	if(currentlyPressedKeys[65]){
-		console.log("click me ");
-		vec3.subtract(Eye,vec3.fromValues(0.1,0,0),Eye);
+	if(currentlyPressedKeys[65]&&currentlyPressedKeys[16]){
+		
+		vec3.add(Eye,vec3.fromValues(-0.1,0,0),Eye);
 	   
 	   }
 	
-	if(currentlyPressedKeys[68]){
+	if(currentlyPressedKeys[68]&&currentlyPressedKeys[16]){
 		 console.log("click ");
 		vec3.add(Eye,vec3.fromValues(0.1,0,0),Eye);
 	   
 	   }
 	
-	if(currentlyPressedKeys[83]){
+	if(currentlyPressedKeys[83]&&currentlyPressedKeys[16]){
 		 console.log("click ");
-		vec3.subtract(Eye,vec3.fromValues(0,0.1,0),Eye);
+		vec3.add(Eye,vec3.fromValues(0,-0.1,0),Eye);
 	   
 	   }
 	
-	if(currentlyPressedKeys[87]){
+	if(currentlyPressedKeys[87]&&currentlyPressedKeys[16]){
 		 console.log("click ");
 		vec3.add(Eye,vec3.fromValues(0,0.1,0),Eye);
 	   

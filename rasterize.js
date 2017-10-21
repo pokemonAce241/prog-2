@@ -77,15 +77,12 @@ var EyeLoc;
 var currentlyPressedKeys = {};
 
 function handleKeyDown(event){
-	if(event.keyCode == 65){
-		lookAt.x -= 0.1;
-		 console.log("lookAt: "+lookAt.x);
-	}
+	currentlyPressedKeys[event.keyCode] = true;	
 }
 
 function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
-	console.log("click "+currentlyPressedKeys[event.keyCode]+event.keyCode);
+	
   }
 
 // ASSIGNMENT HELPER FUNCTIONS
@@ -454,13 +451,13 @@ function handleKeys(){
 	
 	if(currentlyPressedKeys[83]){
 		 console.log("click ");
-		vec3.subtract(Eye,vec3.fromValues(0,0,0.1),lookAt);
+		vec3.subtract(Eye,vec3.fromValues(0,0.1,0),lookAt);
 	   
 	   }
 	
 	if(currentlyPressedKeys[87]){
 		 console.log("click ");
-		vec3.add(Eye,vec3.fromValues(0,0,0.1),lookAt);
+		vec3.add(Eye,vec3.fromValues(0,0.1,0),lookAt);
 	   
 	   }
 	
@@ -569,6 +566,14 @@ gl.uniformMatrix4fv(modelMatrixULoc,false,model);
 
 }
 
+function drawLoop(){
+	handleKeys();
+	renderTriangles();
+	renderEllipsoids();
+	window.setTimeout(renderLoop, 1000 / 60);
+	
+}
+
 
 
 
@@ -584,8 +589,8 @@ function main() {
   loadTriangles(); // load in the triangles from tri file
   loadEllipsoids();
   setupShaders(); // setup the webGL shaders
-  renderTriangles(); // draw the triangles using webGL
-  renderEllipsoids();
+  drawLoop();
+  
 
   
 

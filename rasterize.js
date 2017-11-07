@@ -1,15 +1,15 @@
 /* GLOBAL CONSTANTS AND VARIABLES */
 
 /* assignment specific globals */
-const INPUT_TRIANGLES_URL = "https://ncsucgclass.github.io/prog2/triangles.json"; // triangles file loc
-const INPUT_ELLIPSOIDS_URL = "https://ncsucgclass.github.io/prog2/ellipsoids.json"; // ellipsoids file loc
+const INPUT_TRIANGLES_URL = "https://ncsucgclass.github.io/prog3/triangles.json"; // triangles file loc
+const INPUT_ELLIPSOIDS_URL = "https://ncsucgclass.github.io/prog3/ellipsoids.json"; // ellipsoids file loc
 var defaultEye = vec3.fromValues(0.5,0.5,-0.5); // default eye position in world space
 var defaultCenter = vec3.fromValues(0.5,0.5,0.5); // default view direction in world space
 var defaultUp = vec3.fromValues(0,1,0); // default view up vector
 var lightAmbient = vec3.fromValues(1,1,1); // default light ambient emission
 var lightDiffuse = vec3.fromValues(1,1,1); // default light diffuse emission
 var lightSpecular = vec3.fromValues(1,1,1); // default light specular emission
-var lightPosition = vec3.fromValues(-1,3,-0.5); // default light position
+var lightPosition = vec3.fromValues(2,4,-0.5); // default light position
 var rotateTheta = Math.PI/50; // how much to rotate models by with each key press
 
 /* webgl and geometry data */
@@ -18,11 +18,11 @@ var inputTriangles = []; // the triangle data as loaded from input files
 var numTriangleSets = 0; // how many triangle sets in input scene
 var inputEllipsoids = []; // the ellipsoid data as loaded from input files
 var numEllipsoids = 0; // how many ellipsoids in the input scene
+
 var vertexBuffers = []; // this contains vertex coordinate lists by set, in triples
 var normalBuffers = []; // this contains normal component lists by set, in triples
 var triSetSizes = []; // this contains the size of each triangle set
 var triangleBuffers = []; // lists of indices into vertexBuffers by set, in triples
-var viewDelta = 0; // how much to displace view with each key press
 
 /* shader parameter locations */
 var vPosAttribLoc; // where to put position for vertex shader
@@ -37,6 +37,7 @@ var shininessULoc; // where to put specular exponent for fragment shader
 var Eye = vec3.clone(defaultEye); // eye position in world space
 var Center = vec3.clone(defaultCenter); // view direction in world space
 var Up = vec3.clone(defaultUp); // view up vector in world space
+var viewDelta = 0; // how much to displace view with each key press
 
 // ASSIGNMENT HELPER FUNCTIONS
 
@@ -239,34 +240,43 @@ function setupWebGL() {
     // Set up keys
     document.onkeydown = handleKeyDown; // call this when key pressed
 
-    // Get the canvas and context
-    var canvas = document.getElementById("myWebGLCanvas"); // create a js canvas
-    gl = canvas.getContext("webgl"); // get a webgl object from it
+      // Get the image canvas, render an image in it
+     var imageCanvas = document.getElementById("myImageCanvas"); // create a 2d canvas
+      var cw = imageCanvas.width, ch = imageCanvas.height; 
+      imageContext = imageCanvas.getContext("2d"); 
+      var bkgdImage = new Image(); 
+      bkgdImage.src = "https://ncsucgclass.github.io/prog3/sky.jpg";
+      bkgdImage.onload = function(){
+          var iw = bkgdImage.width, ih = bkgdImage.height;
+          imageContext.drawImage(bkgdImage,0,0,iw,ih,0,0,cw,ch);   
+     } // end onload callback
     
-    try {
-      if (gl == null) {
-        throw "unable to create gl context -- is your browser gl ready?";
-      } else {
-        gl.clearColor(0.0, 0.0, 0.0, 1.0); // use black when we clear the frame buffer
-        gl.clearDepth(1.0); // use max when we clear the depth buffer
-        gl.enable(gl.DEPTH_TEST); // use hidden surface removal (with zbuffering)
-      }
-    } // end try
-    
-    catch(e) {
-      console.log(e);
-    } // end catch
- 
+     // create a webgl canvas and set it up
+     var webGLCanvas = document.getElementById("myWebGLCanvas"); // create a webgl canvas
+     gl = webGLCanvas.getContext("webgl"); // get a webgl object from it
+     try {
+       if (gl == null) {
+         throw "unable to create gl context -- is your browser gl ready?";
+       } else {
+         //gl.clearColor(0.0, 0.0, 0.0, 1.0); // use black when we clear the frame buffer
+         gl.clearDepth(1.0); // use max when we clear the depth buffer
+         gl.enable(gl.DEPTH_TEST); // use hidden surface removal (with zbuffering)
+       }
+     } // end try
+     
+     catch(e) {
+       console.log(e);
+     } // end catch
 } // end setupWebGL
 
 // read models in, load them into webgl buffers
 function loadModels() {
-    
+
     // make an ellipsoid, with numLongSteps longitudes.
     // start with a sphere of radius 1 at origin
     // Returns verts, tris and normals.
     function makeEllipsoid(currEllipsoid,numLongSteps) {
-        
+
         try {
             if (numLongSteps % 2 != 0)
                 throw "in makeSphere: uneven number of longitude steps!";
@@ -351,6 +361,7 @@ function loadModels() {
             var whichSetTri; // index of triangle in current triangle set
             var vtxToAdd; // vtx coords to add to the coord array
             var normToAdd; // vtx normal to add to the coord array
+            var uvToAdd; // uv coords to add to the uv arry
             var triToAdd; // tri indices to add to the index array
             var maxCorner = vec3.fromValues(Number.MIN_VALUE,Number.MIN_VALUE,Number.MIN_VALUE); // bbox corner
             var minCorner = vec3.fromValues(Number.MAX_VALUE,Number.MAX_VALUE,Number.MAX_VALUE); // other corner
@@ -388,7 +399,7 @@ function loadModels() {
                 normalBuffers[whichSet] = gl.createBuffer(); // init empty webgl set normal component buffer
                 gl.bindBuffer(gl.ARRAY_BUFFER,normalBuffers[whichSet]); // activate that buffer
                 gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(inputTriangles[whichSet].glNormals),gl.STATIC_DRAW); // data in
-            
+               
                 // set up the triangle index array, adjusting indices across sets
                 inputTriangles[whichSet].glTriangles = []; // flat index list for webgl
                 triSetSizes[whichSet] = inputTriangles[whichSet].triangles.length; // number of tris in this set
@@ -472,12 +483,14 @@ function setupShaders() {
         
         varying vec3 vWorldPos; // interpolated world position of vertex
         varying vec3 vVertexNormal; // interpolated normal for frag shader
+
         void main(void) {
             
             // vertex position
             vec4 vWorldPos4 = umMatrix * vec4(aVertexPosition, 1.0);
             vWorldPos = vec3(vWorldPos4.x,vWorldPos4.y,vWorldPos4.z);
             gl_Position = upvmMatrix * vec4(aVertexPosition, 1.0);
+
             // vertex normal (assume no non-uniform scale)
             vec4 vWorldNormal4 = umMatrix * vec4(aVertexNormal, 0.0);
             vVertexNormal = normalize(vec3(vWorldNormal4.x,vWorldNormal4.y,vWorldNormal4.z)); 
@@ -487,6 +500,7 @@ function setupShaders() {
     // define fragment shader in essl using es6 template strings
     var fShaderCode = `
         precision mediump float; // set float to medium precision
+
         // eye location
         uniform vec3 uEyePosition; // the eye's position in world
         
